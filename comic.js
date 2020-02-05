@@ -1,51 +1,67 @@
 var arr = [];
 var url = "https://xkcd.now.sh/?comic=303";
-set();
 var ran_arr = [];
+var dates = [];
+var times = [];
+if (localStorage.length !== 0) {
+    ran_arr = JSON.parse(localStorage.getItem("random"));
+    arr = JSON.parse(localStorage.getItem("title-url"));
+    dates = JSON.parse(localStorage.getItem("date"));
+    times = JSON.parse(localStorage.getItem("time"));
+}
+var monthNames = [
+    "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+];
 
 function set() {
 
-    let ran = rand();
+    let currDate = new Date();
+    dates.push(currDate.getDate() + " " + monthNames[currDate.getMonth()] + " " + currDate.getFullYear());
+    times.push(currDate.getHours() + ":" + currDate.getMinutes() + ":" + currDate.getSeconds());
+    localStorage.setItem("date", JSON.stringify(dates));
+    localStorage.setItem("time", JSON.stringify(times));
+    let ran = uni(ran_arr);
+    localStorage.setItem("random", JSON.stringify(ran_arr));
 
-    url = `https://xkcd.now.sh/?comic=${ran}`
+
+    url = `https://xkcd.now.sh/?comic=${ran}`;
     fetch(url)
         .then(response => response.json())
         .then(json => setImage(json))
         .catch(err => console.log(err));
 }
 
-function onClick() {
-
-    set();
-}
-
 
 function setImage(comic) {
 
-    let img = document.createElement('img');
-    img.src = comic.img;
-    let title = comic.title;
-    console.log(img.src);
-    arr.push({ key: title, value: img.src });
-    console.log(arr);
-    localStorage.setItem(0, arr);
-    document.getElementById('comic').src = img.src;
-    document.getElementById('title').innerHTML = title;
-    console.log(arr);
+    arr.push({ key: comic.title, value: comic.img });
+    localStorage.setItem("title-url", JSON.stringify(arr));
+    document.getElementById('comic').src = comic.img;
+    document.getElementById('title').innerHTML = comic.title;
+
 }
 
-// function uni(array) {
-//     let ran=rand();
-//     for(let i=0;i<array.length;i++)
-//     {
-//         if(ran===array[i])
-//         {
+function uni(ran_arr) {
+    let r;
 
-//         }
-//     }
+    while (true) {
+        r = Math.floor(Math.random() * 1000);
+        if (!isPresent(ran_arr, r)) {
+            ran_arr.push(r);
+            break;
 
-// }
-function rand() {
-    let ran = Math.floor(Math.random() * 1000);
-    return ran;
+        }
+    }
+    return r;
+}
+
+function isPresent(a, num) {
+
+    for (let i = 0; i < ran_arr.length; i++) {
+        if (num === a[i]) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
