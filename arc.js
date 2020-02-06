@@ -1,16 +1,13 @@
-var arr = JSON.parse(localStorage.getItem("title-url"));
-var date = JSON.parse(localStorage.getItem("date"));
-var time = JSON.parse(localStorage.getItem("time"));
-
+var obj = JSON.parse(localStorage.getItem("comic"));
 var element = document.getElementById('comic-archive-id');
-for (let i = 0; i < arr.length; i++) {
+for (let i = 0; i < obj.length; i++) {
     element.innerHTML += ` <div class="archive-card" id="card${i}">
 <div class="archive-title">
     <div class="title-number">
     ${i+1}.
     </div>
     <div class="title-name">
-    ${arr[i].key}
+    ${obj[i].title}
     </div>
 </div>
 
@@ -23,13 +20,12 @@ for (let i = 0; i < arr.length; i++) {
             last viewed:
         </div>
         <div>
-            ${date[i]}
+            ${obj[i].date}
         </div>
         <div>
-            ${time[i]}
+            ${obj[i].time}
         </div>
     </div>
 </div>
 </div>`
 }
-console.log(122)
