@@ -45,23 +45,18 @@ function uni(ran_arr) {
     let r;
 
     while (true) {
-        r = Math.floor(Math.random() * 1000);
-        if (!isPresent(ran_arr, r)) {
+
+
+        r = Math.floor((Math.random() * 999) + 1);
+        if (ran_arr.indexOf(r) === -1) {
             ran_arr.push(r);
             break;
 
         }
-    }
-    return r;
-}
-
-function isPresent(a, num) {
-
-    for (let i = 0; i < ran_arr.length; i++) {
-        if (num === a[i]) {
-            return true;
-        } else {
-            return false;
+        if (ran_arr.length >= 10) {
+            console.log("no uniq comics left");
+            break;
         }
     }
+    return r;
 }
