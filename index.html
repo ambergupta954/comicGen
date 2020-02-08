@@ -5,12 +5,14 @@
     <meta charset="UTF-8">
     <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="comic.js"></script>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-
+<body onscroll="scroll()" onload="set()">
+    <div class="loader" id="loader">
+        <img class="load-gif" src="loader.gif">
+    </div>
     <nav class="navbar">
         <div class="nav-options">
             <div class="nav-comm">
@@ -27,16 +29,17 @@
     </nav>
 
     <div class="comic-container">
-        <button class="gen-button" onclick="set()" type="submit" id="gen">GENERATE</button>
+        <!-- <button class="gen-button" onclick="set()" type="submit" id="gen">GENERATE</button> -->
         <div>
             <h3 id="title"></h3>
         </div>
-        <div class="comic-page">
-            <img src="" id="comic">
+
+        <div class="comic-page" id="comics">
+
 
         </div>
     </div>
-
+    <script src="comic.js"></script>
 </body>
 
 </html>

@@ -1,33 +1,32 @@
-var url = "https://xkcd.now.sh/?comic=303";
+var url = "";
 var ran_arr = [];
-var obj = []
+var obj = [];
+var promise_arr = [];
 if (localStorage.length !== 0) {
-
     obj = JSON.parse(localStorage.getItem("comic"));
+    ran_arr = JSON.parse(localStorage.getItem("random"));
 }
 var monthNames = [
     "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
 ];
-
-
-
-function set() {
-
-    let ran = uni(ran_arr);
-    url = `https://xkcd.now.sh/?comic=${ran}`;
-
-    fetch(url)
-        .then(response => response.json())
-        .then(json => setImage(json))
-        .catch(err => console.log(err));
+set = () => {
+    for (let i = 0; i < 4; i++) {
+        let ran = uni(ran_arr);
+        url = `https://xkcd.now.sh/?comic=${ran}`;
+        showLoader();
+        promise_arr.push(fetch(url));
+    }
+    var handle = Promise.all(promise_arr);
+    handle.then(res => Promise.all(res.map(data => data.json())).then(json => {
+            json.map(setImage)
+            hideLoader();
+        })
+        .catch(err => console.log(err)))
+    promise_arr = [];
 }
+var fragment = document.createDocumentFragment();
 
-
-
-
-function setImage(comic) {
-
-
+setImage = (comic) => {
     let currDate = new Date();
     obj.push({
         date: (currDate.getDate() + " " + monthNames[currDate.getMonth()] + " " + currDate.getFullYear()),
@@ -36,30 +35,30 @@ function setImage(comic) {
         url: comic.img
     })
     localStorage.setItem("comic", JSON.stringify(obj));
-    console.log(obj);
-
-    document.getElementById('comic').src = comic.img;
-    document.getElementById('title').innerHTML = comic.title;
-
+    localStorage.setItem("random", JSON.stringify(ran_arr));
+    image = document.createElement('img');
+    image.setAttribute("class", "comic-image");
+    image.setAttribute("src", comic.img);
+    fragment.appendChild(image.cloneNode(true));
+    document.getElementById('comics').appendChild(fragment);
+}
+scroll = () => {
+    let scrlHeight = document.scrollingElement.scrollHeight;
+    let clientH = document.scrollingElement.clientHeight;
+    let scrlTop = document.scrollingElement.scrollTop;
+    if (scrlHeight - clientH === (scrlTop)) {
+        set();
+    }
 }
 
-
-
-
-
-
-
-function uni(ran_arr) {
+uni = (ran_arr) => {
     let r;
 
     while (true) {
-
-
         r = Math.floor((Math.random() * 999) + 1);
         if (ran_arr.indexOf(r) === -1) {
             ran_arr.push(r);
             break;
-
         }
         if (ran_arr.length >= 999) {
             console.log("no uniq comics left");
@@ -68,3 +67,5 @@ function uni(ran_arr) {
     }
     return r;
 }
+showLoader = () => document.getElementById("loader").style.display = "flex";
+hideLoader = () => document.getElementById("loader").style.display = "none";

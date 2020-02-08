@@ -1,13 +1,18 @@
-var obj = JSON.parse(localStorage.getItem("comic"));
+var data = [];
+if (localStorage.length != 0) {
+    data = JSON.parse(localStorage.getItem("comic"));
+}
 var element = document.getElementById('comic-archive-id');
-for (let i = 0; i < obj.length; i++) {
-    element.innerHTML += ` <div class="archive-card" id="card${i}">
+for (let i = 0; i < data.length; i++) {
+    let k = data[i].url;
+    console.log(typeof k)
+    element.innerHTML += ` <div class="archive-card" onclick="popup('${k}')" id="card${i}">
 <div class="archive-title">
     <div class="title-number">
     ${i+1}.
     </div>
     <div class="title-name">
-    ${obj[i].title}
+    ${data[i].title}
     </div>
 </div>
 
@@ -20,12 +25,17 @@ for (let i = 0; i < obj.length; i++) {
             last viewed:
         </div>
         <div>
-            ${obj[i].date}
+            ${data[i].date}
         </div>
         <div>
-            ${obj[i].time}
+            ${data[i].time}
         </div>
     </div>
 </div>
 </div>`
 }
+popup = (url) => {
+    document.getElementById('pop').style.display = "flex";
+    document.getElementById('pop').innerHTML = `<img src="${url}" >`;
+}
+hidepop = () => document.getElementById('pop').style.display = "none";
